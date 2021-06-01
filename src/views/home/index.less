@@ -1,10 +1,53 @@
-@bodyMinHeight:100vh-8rem;
-.home{
+@bodyMinHeight: 100vh-8rem;
+
+.home {
     height: 100vh;
 }
+
 .header-avatar {
     width: 2rem;
     height: 2rem;
+}
+
+.dir_box {
+    height: 50rem;
+    padding: 1rem;
+    >ul {
+        list-style: none;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        >li :active{
+            animation: scale 0.5s forwards;
+        }
+        >li {
+            position: relative;
+            font-size: 0.5rem;
+            color: #646566;
+            width: 33.3%;
+            justify-content: center;
+            display: flex;
+            min-height: 4rem;
+            >div {
+                width: 3rem;
+                height: 3rem;
+                background: url('../../assets/icon/dir/dir.png') no-repeat;
+                background-size: cover;
+            }
+            >span {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: 0 auto;
+                text-align: center;
+                top: 3rem;
+            
+            }
+        }
+
+    }
 }
 
 .home-header {
@@ -21,44 +64,19 @@
     background: #00bbff;
     border-bottom: 1px solid #80808040;
     box-shadow: 0px 3px 4px 0px #80808040;
+    i:nth-child(1){
+        left: 1rem;
+        position: absolute;
+    }
+    i:nth-child(2) {
+        right: 1rem;
+        position: absolute;
+
+    }
 }
-.person-info{
-    display: flex;
-    flex-direction: column;
-    margin-left: 0.5rem;
-    p{
-        margin: 0;
-    }
-    >p{
-        font-size: 0.8rem;
-        color: #fff;
-        font-family: fangsong;
-    }
-    .person-status{
-        font-size: 0.5rem;
-        color: #fff;
-        line-height: 1rem;
-        text-align: center;
-        align-items: flex-end;
-        margin-top: 0.5rem;
-        display: flex;
-        >p{
-            line-height: 0.5rem;
-            text-align: center;
-            align-items: flex-end;
-            
-        }
-        .online{
-            background: url('../../assets/icon/person-status/online.png') no-repeat;
-            width: 0.5rem;
-            height: 0.5rem;
-            background-size: contain;
-        }
-    }
-    
-}
+
 .setting-page {
-    &-close{
+    &-close {
         position: inherit;
         right: 0;
         top: 0;
@@ -67,6 +85,7 @@
         text-align: center;
         line-height: 2rem;
     }
+
     &-show {
         width: 100%;
         height: 100%;
@@ -94,6 +113,7 @@
     animation: message_box_in 0.5s forwards;
     margin-top: 3.1rem;
     min-height: @bodyMinHeight;
+
     .message-box {
         width: 100%;
         height: 3rem;
@@ -101,6 +121,7 @@
         display: flex;
         flex-direction: row;
         box-sizing: border-box;
+
         p {
             margin: 0;
         }
@@ -161,7 +182,7 @@
 
 @keyframes fade_toright {
     0% {
-        
+
         transform: translateX(-100%);
     }
 
@@ -173,7 +194,7 @@
 
 @keyframes fade_toleft {
     0% {
-        
+
         transform: translateX(0);
     }
 
@@ -182,11 +203,22 @@
         transform: translateX(-100%);
     }
 }
+
 @keyframes message_box_in {
-    0%{
+    0% {
         transform: translateX(-60%);
     }
-    100%{
+
+    100% {
         transform: translateX(0);
     }
+}
+@keyframes scale {
+    0%{
+        transform: scale(0.3);
+    }
+    100%{
+        transform: scale(1);
+    }
+    
 }

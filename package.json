@@ -10,6 +10,7 @@
     "@vant/touch-emulator": "^1.2.0",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "localforage": "^1.9.0",
     "qs": "^6.10.1",
     "ts-import-plugin": "^1.6.7",
     "vant": "^2.12.19",

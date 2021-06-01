@@ -4,7 +4,6 @@
 </style>
 <template>
   <div class="main-home">
-    <im-home v-if="Page==='home'" :conversations="conversations" @switchPage="switchPage"></im-home>
-    <im-im  v-if="Page==='im'" :chosedConversation="chosedConversation" @switchPage="switchPage"></im-im>
+    <im-home v-if="Page==='home'"  ></im-home>
   </div>
 </template>

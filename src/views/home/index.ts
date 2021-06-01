@@ -1,76 +1,101 @@
-import { Component, Vue } from 'vue-property-decorator'
-import { Tabbar, TabbarItem, Search, Image, Badge, Icon, PullRefresh } from 'vant'
-import { conversations, Message } from '../../components/class/model/messageModel'
+import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Tabbar, TabbarItem, Search, Image, Badge, Icon, PullRefresh, Uploader, Dialog, Field, Toast } from 'vant'
+import handleCreateDirView from '../../components/class/view/handleCreateDirView'
+import { directory } from '@/components/class/model/directoryModel';
 @Component({
-    inheritAttrs : false,
+    inheritAttrs: false,
     components: {
+        [Dialog.Component.name]: Dialog.Component,
         Tabbar,
         TabbarItem,
         Search,
         'van-Image': Image,
         Badge,
         VIcon: Icon,
-        PullRefresh
+        PullRefresh,
+        Uploader,
+        Field
+
     }
 })
 
 export default class Home extends Vue {
-    
+    @Watch('$route',{immediate:true, deep:true})
+    onchange(newval,oldval){
+       this.getCurrentPage();
+    }
+    createDirView = new handleCreateDirView()
     isFreshing: boolean = false;
     searchKeyWord: string = ''
     active: number = 0;
+    localforage: any = null
+    showDialog = false
+    dirName = ''
+    currDirDeep = 0;
+    dirShowOnPage: Array<directory> = []
+    queryParam: number = 0;
+    showMounts=false
+    totalChapters=0;
     icon = {
         active: 'https://img01.yzcdn.cn/vant/user-active.png',
         inactive: 'https://img01.yzcdn.cn/vant/user-inactive.png',
     }
-    messageList = [
-        { id: '1', avatar: 'https://img01.yzcdn.cn/vant/cat.jpeg', name: 'aa', message: '55555555555', tag: '2', isGroup: true, talker: '找超强' },
-        { id: '2', avatar: 'https://img01.yzcdn.cn/vant/cat.jpeg', name: 'aa', message: '55555555555', tag: '2' },
-        { id: '3', avatar: 'https://img01.yzcdn.cn/vant/cat.jpeg', name: 'aa', message: '55555555555', tag: '2' }
-    ]
-    touch_this: string = '';
-    showSetting: boolean = false;
-    hideSetting: boolean = false;
-
-    get person() {
-        return {
-            id: 'user1',
-            name: '强子',
-            status: 0
+    constructor() {
+        super()
+    }
+    reset(){
+        this.showMounts=false;
+        this.totalChapters=0
+    }
+    addDir(): void {
+        this.reset()
+        if(this.queryParam!==0){
+            this.showMounts=true;
         }
+        this.showDialog = true;
+        
     }
-    get conversations() {
-        return this.$attrs.conversations
-    }
-    created() {
-
-    }
-
-    check_message_detail(conversation: conversations) {
-        // this.touch_this = conversation.conversationId
-        const data = {
-            conversation,
-            page: 'im'
+    async confirmDirName(action: string, done: Function): Promise<void> {
+        if (action === 'confirm') {
+            if (!this.dirName) {
+                Toast('名称不能为空')
+                done()
+                return
+            }
+            const dirResult: Array<directory> = await this.createDirView.formDir(this.dirName,this.queryParam)
+            if (dirResult.length) {
+                this.dirShowOnPage = dirResult
+                Toast('添加成功')
+            } else {
+                Toast("文件夹已存在,请重新命名")
+            }
         }
-        this.$emit('switchPage', data)
+        done()
+        this.dirName = ''
+        this.getCurrentPage()
     }
+    async afterRead(file): Promise<void> {
+        await this.localforage.setItem('img', file.content)
+        const value = await this.localforage.getItem('img')
+        console.log(value)
+    }
+
     onRefresh() {
         setTimeout(() => {
             this.isFreshing = false;
         }, 1000);
     }
-    judgeAvatar(messageBody: Array<Message>): object {
-        let talkerAvatar = {
-            avatar: '',
-            name: ''
-        }
-        messageBody.map((item: Message) => {
-            if (item.talkerId !== this.person.id) {
-                talkerAvatar.avatar = item.avatar
-                talkerAvatar.name = item.talkerName
-                return talkerAvatar;
-            }
+    async intoDir(dirId: number):Promise<void> {
+        this.$router.push({
+            path:'/',
+            query:{dirId:dirId.toString()}
         })
-        return talkerAvatar;
+    }
+    async getCurrentPage():Promise<void>{
+        this.queryParam=Number(location.href.split("=")[1]?location.href.split("=")[1]:0)
+        this.dirShowOnPage = await this.createDirView.dirShowPage(this.queryParam)
+    }
+    async backDir():Promise<void>{
+       this.$router.go(-1)
     }
 }
