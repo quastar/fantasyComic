@@ -53,16 +53,17 @@ export default class Home extends Vue {
             this.showMounts=true;
         }
         this.showDialog = true;
-        
     }
     async confirmDirName(action: string, done: Function): Promise<void> {
         if (action === 'confirm') {
             if (!this.dirName) {
-                Toast('名称不能为空')
-                done()
-                return
+                if(!this.showMounts){
+                    Toast('名称不能为空')
+                    done()
+                    return
+                }
             }
-            const dirResult: Array<directory> = await this.createDirView.formDir(this.dirName,this.queryParam)
+            const dirResult: Array<directory> = await this.createDirView.formDir(this.dirName,this.queryParam,this.totalChapters)
             if (dirResult.length) {
                 this.dirShowOnPage = dirResult
                 Toast('添加成功')

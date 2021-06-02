@@ -45,7 +45,7 @@
       show-cancel-button
       :before-close="confirmDirName"
     >
-      <Field v-model="dirName" label="文件夹名称"></Field>
+      <Field v-model="dirName" label="文件夹名称" v-if="!showMounts"></Field>
       <Field v-model="totalChapters" label="总话数" v-if="showMounts"></Field>
     </van-dialog>
   </div>
